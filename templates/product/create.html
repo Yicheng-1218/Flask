@@ -1,0 +1,53 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<header id="header">
+    <div class="text-center p-5" style="background-color: #d9e3e0;">
+        <h1 class="mt-5">建立商品</h1>
+    </div>
+</header>
+<section>
+    <div class="container py-5">
+        <h2>填寫下方的表單建立商品</h2>
+        <!-- card -->
+        <div class="card mt-3">
+            <div class="card-header">
+                <h4 class="m-0">建立商品</h4>
+            </div>
+            <div class="card-body">
+                <!-- TODO: 顯示表單並使用Bootstrap 4 表單元件  https://getbootstrap.com/docs/4.4/components/forms/-->
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="form-group">
+                        {{ form.title.label }}
+                        {{ form.title(class='form-control', value='商品') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.img_url.label }}
+                        {{ form.img_url(class='form-control', value='https://picsum.photos/id/1038/1200/400') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.category.label }}
+                        {{ form.category(class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.price.label }}
+                        {{ form.price(class='form-control', type='number', min=0, max=1000000) }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.description.label }}
+                        {{ form.description(class='form-control') }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.on_sale.label }}
+                        {{ form.on_sale }}
+                    </div>
+                    <div class="form-group">
+                        {{ form.submit(class='btn btn-primary') }}
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- card end -->
+    </div>
+</section>
+{% endblock %}

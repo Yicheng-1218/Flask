@@ -1,0 +1,33 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<header>
+    <div class="text-center p-5" style="background-color: #d9e3e0;">
+        <h1 class="mt-5">建立商品成功</h1>
+    </div>
+</header>
+<section>
+    <div class="container">
+        <h2>你已成功建立了
+            <span class="text-primary"> {{ new_product.title }} </span>
+        </h2>
+        <!-- TODO: 顯示剛才被成功產生的產品資訊 -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>欄位名稱</th>
+                    <th>值</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key in new_product %}
+                <tr>
+                    <td>{{ key }}</td>
+                    <td>{{ new_product[key] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/">回到首頁</a>
+    </div>
+</section>
+{% endblock %}

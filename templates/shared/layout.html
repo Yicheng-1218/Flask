@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{page_title}}</title>
+    <!-- bootstrap.css -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    <!-- google font -->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&display=swap"
+        rel="stylesheet">
+    <!-- local css -->
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+
+<body>
+    <!-- navbar -->
+    <nav id='nav' class="navbar navbar-expand-sm navbar-dark bg-dark sticky-md-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">Shop</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 ">
+                    <li class="nav-item">
+                        <a class="nav-link me-3" href="/"><i class="fas fa-home"></i> 首頁</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-3" href="/"><i class="fas fa-info-circle"></i> 關於本站</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-3" href="/product/create"><i class="fas fa-folder-plus"></i> 建立商品</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-3" data-bs-toggle="modal" data-bs-target="#signUpModal" href="#"><i
+                                class="fas fa-user-plus"></i> 註冊</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-3" data-bs-toggle="modal" data-bs-target="#loginModal" href="#"><i
+                                class="fas fa-sign-in-alt"></i> 登入</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link me-3" id="logoutBtn" href="#"><i class="fas fa-sign-out-alt"></i> 登出</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- navbar end -->
+    <!-- TODO: 使用 get_flashed_messages 取得所有伺服器快訊
+        並套用Bootstrap 4 Alert 元件
+        https://getbootstrap.com/docs/4.4/components/alerts/
+    -->
+    <!-- modals -->
+    {% include 'shared/login_modal.html' %}
+    {% include 'shared/sign_up_modal.html' %}
+    {% include 'shared/calculate_modal.html' %}
+    <!-- modals end -->
+    <!-- body block -->
+    {% block body %}
+
+    {% endblock %}
+    <!-- body block end -->
+    <a class="gotop btn btn-dark" href="#header"><i class="fas fa-chevron-up"></i></a>
+    <!-- jquery.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <!-- popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <!-- bootstrap.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+    <!-- font awesome -->
+    <script src="https://kit.fontawesome.com/e76fb70977.js" crossorigin="anonymous"></script>
+
+    <!-- firebase auth -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-auth.js"></script>
+    <!-- Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-analytics.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        var firebaseConfig = {
+            apiKey: "AIzaSyAA1Ft29khD4BhvG5-Ccy9flXEc6vQpOto",
+            authDomain: "database-for-flask.firebaseapp.com",
+            projectId: "database-for-flask",
+            storageBucket: "database-for-flask.appspot.com",
+            messagingSenderId: "822973990666",
+            appId: "1:822973990666:web:98c15c5d8fc75ffb471cf3",
+            measurementId: "G-2CHM55785S"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+    </script>
+
+    <!-- main.js -->
+    <script src="/static/js/main.js"></script>
+</body>
+
+</html>

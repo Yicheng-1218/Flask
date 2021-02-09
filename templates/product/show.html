@@ -1,0 +1,203 @@
+{% extends 'shared/layout.html' %}
+{% block body %}
+<!-- 顯示商品詳細資料 -->
+<header id="header"></header>
+<section id='order' class="pt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="hr-title hr-long center"><abbr class="fs-5">訂購頁面</abbr> </div>
+            </div>
+        </div>
+        <!-- 商品訂購區 -->
+        <div class="row">
+            <div class="col-md-12">
+                <!-- 商品卡 -->
+                <div class="card mb-3 border-0">
+                    <div class="row g-0">
+                        <!-- 圖片區域 -->
+                        <div class="col-sm-4">
+                            <img src="{{product.img_url}}" alt="商品圖片">
+                        </div>
+                        <!-- 規格區域 -->
+                        <div id="order_text" class="col-sm-8 ps-5">
+                            {%if product.on_sale%}
+                            {%set sale='success'%}
+                            {%set bg='warning'%}
+                            {%set innerTag='熱賣中'%}
+                            {%else%}
+                            {%set sale='danger'%}
+                            {%set disable='disabled'%}
+                            {%set bg='secondary'%}
+                            {%set innerTag='缺貨中'%}
+                            {%endif%}
+                            <div class="card-body">
+                                <h1 class="card-title">
+                                    {{product.title}}
+                                    <span class="badge bg-{{sale}} fs-6">{{innerTag}}</span>
+                                </h1>
+                                <p class="card-text">
+                                    <!-- TODO: 建立詳細資料包含discount & brand-->
+                                    {%if true%}
+                                    <del class="text-muted fs-5">$240</del>
+                                    <span class="fs-3 p-3">${{product.price}}</span>
+                                    <span class="badge bg-success" style="font-size: .75rem;">7.5折</span>
+                                    {%else%}
+                                    <span class="fs-3 p-3">${{product.price}}</span>
+                                    {%endif%}
+                                </p>
+                                <!-- 資訊清單 -->
+                                <div class="row my-5">
+                                    <div class="col-4">
+                                        <div class="list-group" id="list-tab" role="tablist">
+                                            <a class="list-group-item list-group-item-action active"
+                                                id="list-brand-list" data-bs-toggle="list" href="#list-brand" role="tab"
+                                                aria-controls="brand">品牌</a>
+                                            <a class="list-group-item list-group-item-action" id="list-discount-list"
+                                                data-bs-toggle="list" href="#list-discount" role="tab"
+                                                aria-controls="discount">多件優惠</a>
+                                            <a class="list-group-item list-group-item-action" id="list-transport-list"
+                                                data-bs-toggle="list" href="#list-transport" role="tab"
+                                                aria-controls="transport">運送方式</a>
+                                            <a class="list-group-item list-group-item-action" id="list-location-list"
+                                                data-bs-toggle="list" href="#list-location" role="tab"
+                                                aria-controls="location">出貨地</a>
+                                            <a class="list-group-item list-group-item-action"
+                                                id="list-specification-list" data-bs-toggle="list"
+                                                href="#list-specification" role="tab"
+                                                aria-controls="specification">規格</a>
+                                        </div>
+                                    </div>
+                                    <div class="col-8 fs-4 position-relative">
+                                        <div class="tab-content position-absolute top-50 start-25 translate-middle-y"
+                                            id="nav-tabContent">
+                                            <div class="tab-pane fade show active" id="list-brand" role="tabpanel"
+                                                aria-labelledby="list-brand-list">
+                                                <p>自有品牌</p>
+                                            </div>
+                                            <div class="tab-pane fade " id="list-discount" role="tabpanel"
+                                                aria-labelledby="list-discount-list">
+                                                <p>多件優惠 買 (>=3) 件 $120</p>
+                                                <button type="button" class="btn btn-primary px-2 py-1"
+                                                    data-bs-toggle="modal" data-bs-target="#calculateModal">
+                                                    <i class="fas fa-calculator"></i> 細算
+                                                </button>
+                                            </div>
+                                            <div class="tab-pane fade" id="list-transport" role="tabpanel"
+                                                aria-labelledby="list-transport-list">
+                                                <p><i class="fas fa-truck">宅配</i></p>
+                                                <p><i class="fas fa-store-alt">超商店到店</i></p>
+                                            </div>
+                                            <div class="tab-pane fade" id="list-location" role="tabpanel"
+                                                aria-labelledby="list-location-list">
+                                                <p>新北市淡水區</p>
+                                            </div>
+                                            <div class="tab-pane fade" id="list-specification" role="tabpanel"
+                                                aria-labelledby="list-specification-list">
+                                                <p>{{product.category}}100ml</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="card-text"><small class="text-muted">上架時間{{product.created_at}}</small></p>
+
+
+                                <a href="#" class="btn btn-{{bg}} {{disable}}"><i class="fas fa-cart-plus"></i> ADD TO
+                                    CART</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="hr-title hr-long center"><abbr class="fs-5">商品介紹</abbr> </div>
+            </div>
+        </div>
+        <!-- 描述區域 -->
+        <div class="row mt-5">
+            <div class="col-12 text-center">
+                {% set description = product.description.split('&#010;') %}
+                {%for str in description%}
+                <p>{{str}}</p>
+                {%endfor%}
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- 新增留言表單 -->
+<section>
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="hr-title hr-long center"><abbr class="fs-5">新增留言</abbr> </div>
+            </div>
+        </div>
+        <div class="row">
+            <form method="post">
+                <div class="col-md-12">
+                    <div class="form-group my-3">
+                        <div class="form-floating">
+                            {{created_comment_form.email(class='form-control',id="floatingTextarea1",type='email')}}
+                            {{created_comment_form.email.label(for="floatingTextarea1")}}
+                        </div>
+                    </div>
+                    <div class="form-group my-3">
+                        <div class="form-floating">
+                            {{created_comment_form.content(class="form-control",id="floatingTextarea2"
+                            ,style="height:100px")}}
+                            {{created_comment_form.content.label(for="floatingTextarea2")}}
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        {{created_comment_form.submit(class='btn btn-dark my-3 float-end')}}
+                    </div>
+                    {{created_comment_form.hidden_tag()}}
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<!-- 顯示留言 -->
+<section>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="hr-title hr-long center"><abbr class="fs-5">留言版</abbr> </div>
+            </div>
+        </div>
+        <div class="row">
+            {%for comment in comment_list%}
+            <div class="card mt-3">
+                <div class="card-header">
+                    <p>{{comment.email}}</p>
+                    <small class="text-muted">{{comment.created_at}}</small>
+                </div>
+                <div class="card-body">
+                    <p> {{comment.content}}</p>
+                    <hr>
+                    <!-- 修改留言的表單 -->
+                    <form method="post">
+                        {{comment.form.hidden_tag()}}
+                        <div class="form-group">
+                            {{comment.form.content.label}}
+                            {{comment.form.content(class='form-control')}}
+                        </div>
+                        <div class="form-group">
+                            {{comment.form.submit(class='btn btn-dark float-end my-3')}}
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {%endfor%}
+        </div>
+    </div>
+</section>
+{% endblock %}

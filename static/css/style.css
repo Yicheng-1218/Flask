@@ -1,0 +1,76 @@
+a,p,h1,h2,h3,h4,h5,h6,abbr,del,span{
+    font-family: 'Noto Sans TC', sans-serif;
+}
+img{
+    max-width: 100%;
+}
+nav li a{
+    font-weight: 300;
+}
+.gotop{
+    float: right;
+}
+.hr-title.hr-long {
+    width: 50%;
+    margin: 20px auto 30px;
+}
+.hr-title {
+    border-top-style: solid;
+    border-top-width: 1px;
+    font-size: 16px;
+    text-align: center;
+    height: 10px;
+    line-height: 20px;
+    margin: 10px 0;
+    height: auto;
+    color: #505050;
+}
+.hr-title abbr {
+    padding: 2px 10px;
+    border-radius: 2px;
+    position: relative;
+    top: -10px;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+.hr-title abbr {
+    background-color: #ffffff;
+}
+.center {
+    float: none;
+    margin: 0 auto;
+}
+#product h2{
+    margin: 60px 0px;
+}
+#edit_area .card{
+    box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.35);
+}
+#description{
+    min-height: 20vh;
+}
+@media (min-width: 992px){
+    .col-md-3 {
+        width: 25%;
+    }
+}
+@media (min-width: 480px) and (max-width: 1366px){
+    .col-md-1, .col-md-2, .col-md-3, .col-md-4 {
+        clear: right !important;
+        float: left;
+        margin-right: 0;
+        width: 49.99%;
+    }
+}
+@media only screen and (max-width:768px){
+    #header img{
+        height: auto;
+    }
+    .hr-title.hr-long {
+        width: 100%;
+    }
+    #order #order_text{
+        padding: 0!important;
+    }
+}
