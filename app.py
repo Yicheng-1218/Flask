@@ -1,10 +1,12 @@
 # 引用flask相關資源
 # 引用各種表單類別
 from forms import CreateCommentForm, CreateProductForm, DeleteProductForm, EditProductForm, UpdateCommentForm
-from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify, abort
 import time
 import firebase_admin
-from firebase_admin import credentials, firestore
+from firebase_admin import credentials, firestore, auth, exceptions
+from flask_wtf import CSRFProtect
+import datetime
 
 # db初始化
 cred = credentials.Certificate(
@@ -15,19 +17,79 @@ db = firestore.client()
 
 
 app = Flask(__name__)
-
+csrf = CSRFProtect(app)
+csrf.init_app(app)
 # !設定應用程式的SECRET_KEY
 app.config['SECRET_KEY'] = 'abc12345678'
 # !debug用 cache為零
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 page_title = '主頁'
-
+cookie_name = 'flask_cookie'
 
 # 轉換秒數時間為當地時間
+
+
 def time_format(sec_time) -> str:
     localtime = time.localtime(sec_time)
     return str(localtime.tm_year) + '年' + \
         str(localtime.tm_mon) + '月' + str(localtime.tm_mday) + '日'
+
+
+# 每個路由request之前都會先經過這關
+@app.context_processor
+def check_login():
+    # 取得session_cookie
+    session_cookie = request.cookies.get(cookie_name)
+    # 預設登入狀態
+    auth_state = {
+        # 是否登入
+        'is_login': False,
+        # 是否為admin
+        'is_admin': False,
+        # 資料
+        'user': {
+
+        }
+    }
+    # 準備驗證
+    try:
+        # 用戶登入成功
+        # 驗證session_cookie
+        user_info = auth.verify_session_cookie(
+            session_cookie, check_revoked=True)
+        print('[用戶資料]', user_info)
+        # 將資料存入登入狀態內
+        auth_state['user'] = user_info
+        # 取得user的email
+        email = user_info['email']
+        # 取得admin_list/{email} 文件
+        admin_doc = db.document(f'admin_list/{email}').get()
+        if admin_doc.exists:
+            print(f'[{email}:是否為管理員]', admin_doc.exists)
+            auth_state['is_admin'] = True
+        # 將用戶標記為登入狀態
+        auth_state['is_login'] = True
+    except:
+        # 用戶未登入
+        print('[用戶未登入]')
+
+    # 把auth_state發送至各個templates
+    return dict(auth_state=auth_state)
+
+
+# 路由保護邏輯
+@app.before_request()
+def guard():
+    auth_state = check_login()['auth_state']
+    endpoint = request.endpoint
+    is_admin = auth_state['is_admin']
+    admin_route_list = [
+        'create_product_page',
+        'create_finished_page',
+        'edit_product_page',
+    ]
+    if not is_admin and endpoint in admin_route_list:
+        return redirect('/')
 
 
 @app.route('/')
@@ -46,6 +108,35 @@ def index_page():
 
     # 首頁路由
     return render_template('index.html', product_list=product_list, page_title=page_title)
+
+
+@app.route('/api/login', methods=['POST'])
+def login():
+    print("準備開始登入API流程")
+    # 取得前端傳給後端的資料
+    id_token = request.json['idToken']
+    # 設定session失效時間，7天
+    expires_in = datetime.timedelta(days=7)
+    try:
+        # 產生 session cookie.
+        session_cookie = auth.create_session_cookie(
+            id_token, expires_in=expires_in)
+        response = jsonify({'status': 'success'})
+        # 將session_cookie寫入使用者瀏覽器內
+        expires = datetime.datetime.now() + expires_in
+        response.set_cookie(
+            cookie_name, session_cookie, expires=expires, httponly=True)
+        return response
+    except exceptions.FirebaseError:
+        return abort(401, 'idToken失效或Firebase掛了')
+
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    # 讓指定cookie失效
+    respone = jsonify({'status': 'success'})
+    respone.set_cookie(cookie_name, expires=0)
+    return respone
 
 
 @app.route('/product/create', methods=['GET', 'POST'])

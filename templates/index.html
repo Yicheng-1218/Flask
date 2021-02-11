@@ -1,6 +1,6 @@
 {% extends 'shared/layout.html' %}
 {% block body %}
-<header id="header">
+<section>
     <div id="carouselExampleIndicators" class="carousel carousel-dark slide" data-bs-ride="carousel">
         <ol class="carousel-indicators">
             <li data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"></li>
@@ -30,7 +30,7 @@
             <span class="visually-hidden">Next</span>
         </a>
     </div>
-</header>
+</section>
 <section id='product' class="pt-5">
     <div class="container text-center">
         <div class="row">
@@ -43,16 +43,23 @@
                 {%for product in product_list%}
                 <div class="col-md-3">
                     <div class="card m-2" style="max-width:100%; box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.35);">
-                        <img src="{{product.img_url}}" class="card-img-top" alt="產品圖片">
+                        <a href="/product/{{product.id}}/show">
+                            <img src="{{product.img_url}}" class="card-img-top" alt="產品圖片">
+                        </a>
+
                         <div class="card-body">
-                            <h5 class="card-title mb-1">{{product.title}}</h5>
+                            <h5>
+                                <a href="/product/{{product.id}}/show"
+                                    class="card-title mb-1 text-decoration-none text-dark">{{product.title}}</a>
+                            </h5>
                             <h6 class="badge mb-2 bg-dark" style="font-weight: 400; color:#e6e6e6">{{product.category}}
                             </h6>
                             <!-- <p class="card-text">描述: {{product.description}}</p> -->
                             <p class="card-text">$ {{product.price}}</p>
                             <p class="card-text">上架時間: {{product.created_at}}</p>
-                            <a href="/product/{{product.id}}/show" class="btn btn-primary">檢視詳情</a>
+                            {%if auth_state.is_admin%}
                             <a href="/product/{{product.id}}/edit" class="btn btn-warning">編輯</a>
+                            {%endif%}
                         </div>
                     </div>
                 </div>
