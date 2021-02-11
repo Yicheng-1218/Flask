@@ -18,7 +18,7 @@ _mailinglist
 docs/_build/
 .vscode
 node_modules
-
+package-lock.json
 # Coverage reports
 htmlcov/
 .coverage
