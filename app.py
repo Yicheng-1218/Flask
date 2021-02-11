@@ -282,7 +282,6 @@ def edit_product_page(pid):
     return render_template('product/edit.html', form=form, product=product, form_del=form_del, page_title=page_title)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    # 應用程式開始運行
-    app.run(debug=True, host='0,0,0,0', port=port)
+    app.run(host='0.0.0.0', port=port)
