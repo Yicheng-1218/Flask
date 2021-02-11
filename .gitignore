@@ -18,6 +18,7 @@ _mailinglist
 docs/_build/
 .vscode
 Firebase_adminkey.json
+node_modules
 
 # Coverage reports
 htmlcov/

@@ -1,3 +1,5 @@
+import * as Ladda from './ladda.js';
+
 function finalizeLogin(res) {
     res.user.getIdToken()
         .then(idToken => {
@@ -34,6 +36,8 @@ $('#loginForm').submit(function (event) {
         })
         // 如果登入失敗
         .catch(err => {
+            // 停止動畫
+            Ladda.stopAll();
             console.log('[登入失敗]', err)
             const code = err.code;
             if (code == "auth/wrong-password") {
@@ -63,6 +67,7 @@ $('#signUpForm').submit(function (event) {
             finalizeLogin(res);
         })
         .catch(err => {
+            Ladda.stopAll();
             console.log('[err]', err);
             const code = err.code;
             if (code == 'auth/email-already-in-use') {
@@ -88,3 +93,5 @@ $('#logoutBtn').click(function () {
         })
 });
 
+// 自動偵測button的submit事件
+Ladda.bind('button[type=submit]');

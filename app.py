@@ -7,6 +7,7 @@ import firebase_admin
 from firebase_admin import credentials, firestore, auth, exceptions
 from flask_wtf import CSRFProtect
 import datetime
+import os
 
 # db初始化
 cred = credentials.Certificate(
@@ -21,8 +22,6 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 # !設定應用程式的SECRET_KEY
 app.config['SECRET_KEY'] = 'abc12345678'
-# !debug用 cache為零
-app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 page_title = '主頁'
 cookie_name = 'flask_cookie'
 
@@ -78,7 +77,7 @@ def check_login():
 
 
 # 路由保護邏輯
-@app.before_request()
+@app.before_request
 def guard():
     auth_state = check_login()['auth_state']
     endpoint = request.endpoint
@@ -88,7 +87,9 @@ def guard():
         'create_finished_page',
         'edit_product_page',
     ]
+    # 如果使用者造訪管理員保護頁面，且非管理員
     if not is_admin and endpoint in admin_route_list:
+        # 強制導向回首頁
         return redirect('/')
 
 
@@ -282,5 +283,6 @@ def edit_product_page(pid):
 
 
 if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))
     # 應用程式開始運行
-    app.run(debug=True)
+    app.run(host='0,0,0,0', port=port)
