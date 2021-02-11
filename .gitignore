@@ -17,6 +17,7 @@ _mailinglist
 .idea/
 docs/_build/
 .vscode
+Firebase_adminkey.json
 
 # Coverage reports
 htmlcov/
