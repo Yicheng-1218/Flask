@@ -1,6 +1,6 @@
 # 引用flask相關資源
 # 引用各種表單類別
-from forms import CreateCommentForm, CreateProductForm, DeleteProductForm, EditProductForm, UpdateCommentForm
+from forms import CreateCommentForm, CreateProductForm, DeleteCommentForm, DeleteProductForm, EditProductForm, UpdateCommentForm
 from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify, abort
 import time
 import firebase_admin
@@ -22,7 +22,9 @@ csrf = CSRFProtect(app)
 csrf.init_app(app)
 # !設定應用程式的SECRET_KEY
 app.config['SECRET_KEY'] = 'abc12345678'
-page_title = '主頁'
+# !設定快取時間為0
+# app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+page_title = 'SH0PING'
 cookie_name = 'flask_cookie'
 
 # 轉換秒數時間為當地時間
@@ -193,9 +195,11 @@ def show_product_page(pid):
     # 建立留言表單
     created_comment_form = CreateCommentForm()
     # 如果表單被送出
+    auth_state = check_login()['auth_state']
     if created_comment_form.validate_on_submit():
+        email = auth_state['user']['email']
         new_comment = {
-            'email': created_comment_form.email.data,
+            'email': email,
             'content': created_comment_form.content.data,
             'created_at': time.time(),
         }
@@ -213,11 +217,12 @@ def show_product_page(pid):
         comment['id'] = pid
         # 把更新留言的表單存到留言內
         # !在多表單的情況下加入prefix參數，可以幫每個表單加上不同前綴，以防伺服器混亂
-        comment['form'] = UpdateCommentForm(prefix=doc.id)
+        comment['update_form'] = UpdateCommentForm(prefix=doc.id)
+        comment['del_form'] = DeleteCommentForm(prefix=doc.id+'-del')
         # 如果該表單被送出且合法
-        if comment['form'].validate_on_submit():
+        if comment['update_form'].validate_on_submit():
             updated_comment = {
-                'content': comment['form'].content.data
+                'content': comment['update_form'].content.data
             }
             # 把資料更新到資料庫內
             db.document(
@@ -225,8 +230,12 @@ def show_product_page(pid):
             # 重新導向
             return redirect(f'/product/{pid}/show')
 
+        if comment['del_form'].validate_on_submit():
+            db.document(f'product_list/{pid}/comment_list/{doc.id}').delete()
+            return redirect(f'/product/{pid}/show')
+
         # 把內容放入表單內當預設值
-        comment['form'].content.data = comment['content']
+        comment['update_form'].content.data = comment['content']
         # 格式時間
         comment['created_at'] = time_format(comment['created_at'])
         comment_list.append(comment)
@@ -284,4 +293,8 @@ def edit_product_page(pid):
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
+    # !正式入口
     app.run(host='0.0.0.0', port=port)
+
+    # !debug用
+    # app.run(debug=True)

@@ -7,6 +7,39 @@ img{
 nav li a{
     font-weight: 300;
 }
+.footer{
+    color: #727272;
+}
+.footer h4{
+	font-size: 20px;
+    margin-bottom: 15px;
+
+}
+.footer ul{
+	list-style: none;
+    padding: 0;
+}
+.footer ul a{
+	color: #c7c7c7;
+}
+.footer a{
+	color:#c7c7c7;
+}
+.footer a:hover{
+	color:#c7c7c7;
+}
+.footer ul a:hover{
+	color: #707070;
+	text-decoration: none;
+	opacity: 0.8;
+}
+.footer ul li{
+	margin-bottom: 2px;
+}
+.footer ul{
+	float: left;
+    margin-right: 46px;
+}
 .gotop{
     float: right;
 }
@@ -48,7 +81,7 @@ nav li a{
     box-shadow: 0 0 8px 0 rgba(0, 0, 0, 0.35);
 }
 #description{
-    min-height: 20vh;
+    min-height: 30vh;
 }
 @media (min-width: 992px){
     .col-md-3 {

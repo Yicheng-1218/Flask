@@ -21,7 +21,8 @@ class CreateProductForm(FlaskForm):
     # 縮圖網址(img_url)
     img_url = StringField('產品圖片')
     # 價格(price)
-    price = IntegerField('產品價格')
+    price = IntegerField('產品價格', validators=[NumberRange(
+        min=1, max=1000000, message='1 < price < 1000000')])
     # 是否銷售中(on_sale)
     on_sale = BooleanField('是否銷售中')
     # 類別(category)
@@ -39,7 +40,8 @@ class EditProductForm(FlaskForm):
     # 縮圖網址(img_url)
     img_url = StringField('產品圖片')
     # 價格(price)
-    price = IntegerField('產品價格')
+    price = IntegerField('產品價格', validators=[NumberRange(
+        min=1, max=1000000, message='1 < price < 1000000')])
     # 是否銷售中(on_sale)
     on_sale = BooleanField('是否銷售中')
     # 類別(category)
@@ -60,7 +62,7 @@ class DeleteProductForm(FlaskForm):
 
 class CreateCommentForm(FlaskForm):
     # 新增留言的表單
-    email = StringField('Email', validators=[DataRequired()])
+    # email = StringField('Email', validators=[DataRequired()])
     content = TextAreaField('留言內容', validators=[DataRequired()])
     submit = SubmitField('發佈留言')
 
@@ -69,3 +71,7 @@ class UpdateCommentForm(FlaskForm):
     # 更新留言的表單
     content = TextAreaField('留言內容', validators=[DataRequired()])
     submit = SubmitField('更新留言')
+
+
+class DeleteCommentForm(FlaskForm):
+    submit = SubmitField('刪除留言')

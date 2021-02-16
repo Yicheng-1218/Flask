@@ -98,11 +98,17 @@
                                         </div>
                                     </div>
                                 </div>
-                                <p class="card-text"><small class="text-muted">上架時間{{product.created_at}}</small></p>
+                                <p class="card-text">
+                                    <small class="text-muted">上架時間{{product.created_at}}</small>
+                                    &nbsp;
+                                    <a href="#" class="btn btn-{{bg}} {{disable}}">
+                                        <i class="fas fa-cart-plus"></i>
+                                        ADD TO CART
+                                    </a>
+                                </p>
 
 
-                                <a href="#" class="btn btn-{{bg}} {{disable}}"><i class="fas fa-cart-plus"></i> ADD TO
-                                    CART</a>
+
                             </div>
                         </div>
                     </div>
@@ -141,12 +147,15 @@
             </div>
         </div>
         <div class="row">
+            {% if auth_state.is_login%}
             <form method="post">
                 <div class="col-md-12">
                     <div class="form-group my-3">
                         <div class="form-floating">
-                            {{created_comment_form.email(class='form-control',id="floatingTextarea1",type='email')}}
-                            {{created_comment_form.email.label(for="floatingTextarea1")}}
+                            <p class="form-control" id='email'>
+                                {{auth_state.user.email}}
+                            </p>
+                            <label for="email">EMAIL</label>
                         </div>
                     </div>
                     <div class="form-group my-3">
@@ -162,6 +171,18 @@
                     {{created_comment_form.hidden_tag()}}
                 </div>
             </form>
+            {%else%}
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-4 offset-4">
+                        <a class="btn btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#loginModal" href="#">
+                            登入發布留言
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            {%endif%}
         </div>
     </div>
 </section>
@@ -176,7 +197,7 @@
         </div>
         <div class="row">
             {%for comment in comment_list%}
-            <div class="card mt-3">
+            <div class="card my-3">
                 <div class="card-header">
                     <p>{{comment.email}}</p>
                     <small class="text-muted">{{comment.created_at}}</small>
@@ -185,16 +206,22 @@
                     <p> {{comment.content}}</p>
                     <hr>
                     <!-- 修改留言的表單 -->
+                    {%if comment.email==auth_state.user.email%}
                     <form method="post">
-                        {{comment.form.hidden_tag()}}
+                        {{comment.update_form.hidden_tag()}}
                         <div class="form-group">
-                            {{comment.form.content.label}}
-                            {{comment.form.content(class='form-control')}}
+                            {{comment.update_form.content.label}}
+                            {{comment.update_form.content(class='form-control')}}
                         </div>
                         <div class="form-group">
-                            {{comment.form.submit(class='btn btn-dark float-end my-3')}}
+                            {{comment.update_form.submit(class='btn btn-dark float-end my-3',type='submit')}}
                         </div>
                     </form>
+                    <form method="post">
+                        {{comment.del_form.hidden_tag()}}
+                        {{comment.del_form.submit(class='btn btn-danger my-3')}}
+                    </form>
+                    {%endif%}
                 </div>
             </div>
             {%endfor%}
