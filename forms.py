@@ -1,3 +1,4 @@
+from itertools import product
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SubmitField, BooleanField, SelectField, TextAreaField, FloatField
 from wtforms.validators import DataRequired, NumberRange
@@ -12,6 +13,12 @@ category_options = [
     ('保養品', '保養品'),
     ('其他', '其他')
 ]
+
+
+class CreateByShopee(FlaskForm):
+    url = StringField('蝦皮連結')
+    # 按鈕送出
+    submit = SubmitField('建立商品')
 
 
 class CreateProductForm(FlaskForm):

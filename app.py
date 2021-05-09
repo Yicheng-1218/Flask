@@ -1,6 +1,7 @@
 # 引用flask相關資源
 # 引用各種表單類別
-from forms import CreateCommentForm, CreateProductForm, DeleteCommentForm, DeleteProductForm, EditProductForm, UpdateCommentForm
+from flask.wrappers import Request
+from forms import CreateByShopee, CreateCommentForm, CreateProductForm, DeleteCommentForm, DeleteProductForm, EditProductForm, UpdateCommentForm
 from flask import Flask, render_template, request, session, redirect, url_for, flash, jsonify, abort
 import time
 import firebase_admin
@@ -147,6 +148,9 @@ def create_product_page():
     # 建立商品頁的路由
     page_title = '商品建立頁面'
     # 建立商品表單的實例
+    shopee = CreateByShopee()
+    # if shopee.validate_on_submit():
+
     form = CreateProductForm()
     # 設定表單送出後的處理
     if form.validate_on_submit():
@@ -294,7 +298,7 @@ def edit_product_page(pid):
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
     # !正式入口
-    app.run(host='0.0.0.0', port=port)
+    # app.run(host='0.0.0.0', port=port)
 
     # !debug用
-    # app.run(debug=True)
+    app.run(debug=True)
